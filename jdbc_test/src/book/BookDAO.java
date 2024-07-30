@@ -64,12 +64,110 @@ public class BookDAO {
 			pstmt.setInt(7, bookInfo.getPage());
 			
 			resultChk = pstmt.executeUpdate();
+			//조회만 할 때 : executeQuery();
 			
 		}catch (SQLException e) {
 			System.out.println("error :" + e);
 		}finally {
 			try {
-				
+				if(pstmt != null) {
+					pstmt.close();
+				}
+				if(conn != null && conn.isClosed()) {
+					conn.close();
+				}
+			}catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return resultChk;
+	}
+	
+	
+	
+	public int updateBook(int bookId, String updateTitle) {
+		
+		int resultChk = 0;
+		
+		try {
+			Class.forName(driver);
+			conn = DriverManager.getConnection(db_url, "root", "1234");
+			if(conn != null) {
+				System.out.println("접속성공");
+			}
+		}catch(ClassNotFoundException e) {
+			System.out.println("드라이버 로드 실패");
+			e.printStackTrace();
+		}catch(SQLException e) {
+			System.out.println("접속 실패");
+			e.printStackTrace();
+		}
+		
+		try {
+			String sql = "UPDATE tb_book_info\r\n"
+					   + "SET book_title = ?\r\n"
+					   + "WHERE book_id = ?;";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, updateTitle);
+			pstmt.setInt(2, bookId);			
+			
+			resultChk = pstmt.executeUpdate();
+
+		}catch (SQLException e) {
+			System.out.println("error :" + e);
+		}finally {
+			try {
+				if(pstmt != null) {
+					pstmt.close();
+				}
+				if(conn != null && conn.isClosed()) {
+					conn.close();
+				}
+			
+			}catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}	
+		
+		return bookId;
+	}
+	
+	
+	
+	public int deleteBooks(String title){
+		
+		int resultChk = 0;
+		
+		try {
+			Class.forName(driver);
+			conn = DriverManager.getConnection(db_url, "root", "1234");
+			if(conn != null) {
+				System.out.println("접속성공");
+			}
+		}catch(ClassNotFoundException e) {
+			System.out.println("드라이버 로드 실패");
+			e.printStackTrace();
+		}catch(SQLException e) {
+			System.out.println("접속 실패");
+			e.printStackTrace();
+		}
+		
+		try {
+			String sql = "DELETE FROM tb_book_info\r\n"
+					   + "WHERE book_title =?";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, title);
+			
+			resultChk = pstmt.executeUpdate();
+
+		}catch (SQLException e) {
+			System.out.println("error :" + e);
+		}finally {
+			try {
 				if(pstmt != null) {
 					pstmt.close();
 				}
@@ -83,8 +181,7 @@ public class BookDAO {
 		}
 		
 		return resultChk;
-	}
-	
+	}	
 	
 	
 	
@@ -117,7 +214,7 @@ public class BookDAO {
 					+ "    create_date,\r\n"
 					+ "    update_date\r\n"
 					+ "FROM tb_book_info\r\n"
-					+ "WhERE book_title LIKE CONCAT('%',?,'%');";
+					+ "WhERE book_title = ?;";
 			
 			pstmt = conn.prepareStatement(sql);
 			
@@ -145,7 +242,6 @@ public class BookDAO {
 			}
 
 		}catch (SQLException e) {
-			// TODO: handle exception
 			System.out.println("error :" + e);
 		}finally {
 			try {
@@ -225,7 +321,6 @@ public class BookDAO {
 			}
 
 		}catch (SQLException e) {
-			// TODO: handle exception
 			System.out.println("error :" + e);
 		}finally {
 			try {
@@ -244,7 +339,6 @@ public class BookDAO {
 				e.printStackTrace();
 			}
 		}
-		
 		
 		return bookList;
 	}

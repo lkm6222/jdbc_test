@@ -26,12 +26,12 @@ public class BookServiceImpl implements BookService{
 
 			case 2 :
 				System.out.println("2. 도서 정보 수정");
-//				updateMember();
+				updateBook();
 				break;
 				
 			case 3 :
 				System.out.println("3. 도서 정보 삭제");
-//				deleteMember();
+				deleteBooks();
 				break;
 				
 			case 4 :
@@ -111,11 +111,72 @@ public class BookServiceImpl implements BookService{
 		resultChk = bookDAO.insertBook(bookInfo);
 		
 		if(resultChk > 0 ) {
-			System.out.println("도서가 등록되었습니다.");
+			System.out.println(">>>>>>>>>>>>도서가 등록되었습니다.");
 		} else {
-			System.out.println("도서 등록에 실패했습니다.");
+			System.out.println(">>>>>>>>>>>>도서 등록에 실패했습니다.");
 		}
 	}
+	
+
+	
+	//2. 도서 정보 수정
+	public void updateBook() {
+
+		List<HashMap<String, Object>> bookList = new ArrayList();
+
+		System.out.println("검색 할 도서명을 입력하세요>>>>>>>>>>>>");
+		sc.nextLine();
+		String title = sc.nextLine();
+
+		bookList = bookDAO.printSearchBooks(title);
+		
+		System.out.println("도서ID\t도서명\t저자\t출판사\t등록일");
+		for(int i = 0; i < bookList.size(); i++) {
+			System.out.print(bookList.get(i).get("book_id") + "\t");
+			System.out.print(bookList.get(i).get("book_title") + "\t");
+			System.out.print(bookList.get(i).get("book_author") + "\t");
+			System.out.print(bookList.get(i).get("book_publisher")+ "\t");
+			System.out.println(bookList.get(i).get("create_date"));
+		}
+		
+		System.out.println("수정 할 도서의 순번을 입력하세요>>>>>>>>>>>>");
+		int num = sc.nextInt();
+		int bookId = (int) bookList.get(num-1).get("book_id");
+		
+		System.out.println("수정 할 도서명을 입력하세요>>>>>>>>>>>>>");
+		sc.nextLine();
+		String updateTitle = sc.nextLine();
+		
+		int resultChk = 0;
+		resultChk = bookDAO.updateBook(bookId, updateTitle);
+		
+		if(resultChk > 0 ) {
+			System.out.println(">>>>>>>>>>>>도서가 수정되었습니다.");
+		} else {
+			System.out.println(">>>>>>>>>>>>도서 수정에 실패했습니다.");
+		}
+	}
+
+	
+	
+	
+	//3. 도서 정보 삭제(도서명 기준)
+	public void deleteBooks() {
+
+		System.out.println("검색 할 도서명을 입력하세요>>>>>>>>>>>>");
+		sc.nextLine();
+		String title = sc.nextLine();
+		
+		int resultChk = 0;
+		resultChk = bookDAO.deleteBooks(title);
+		
+		if(resultChk > 0 ) {
+			System.out.println(">>>>>>>>>>>>도서가 삭제되었습니다.");
+		} else {
+			System.out.println(">>>>>>>>>>>>도서 삭제에 실패했습니다.");
+		}
+	}
+	
 	
 	
 	//4. 도서 정보 출력(도서명으로 검색)
@@ -130,13 +191,14 @@ public class BookServiceImpl implements BookService{
 		//입력 받은 title을 DAO에 넘겨서 리스트값 받아오기
 		bookList = bookDAO.printSearchBooks(title);
 		
-		System.out.println("도서명\t저자\t출판사");
+		System.out.println("도서ID\t도서명\t저자\t출판사\t등록일");
 		for(int i = 0; i < bookList.size(); i++) {
+			System.out.print(bookList.get(i).get("book_id") + "\t");
 			System.out.print(bookList.get(i).get("book_title") + "\t");
 			System.out.print(bookList.get(i).get("book_author") + "\t");
-			System.out.println(bookList.get(i).get("book_publisher"));
+			System.out.print(bookList.get(i).get("book_publisher")+ "\t");
+			System.out.println(bookList.get(i).get("create_date"));
 		}
-
 	}
 	
 	
@@ -146,20 +208,13 @@ public class BookServiceImpl implements BookService{
 		List<HashMap<String, Object>> bookList = new ArrayList();
 		bookList = bookDAO.printAllBooks();
 		
-		System.out.println("도서명\t저자\t출판사");
-		
+		System.out.println("도서ID\t도서명\t저자\t출판사\t등록일");
 		for(int i = 0; i < bookList.size(); i++) {
+			System.out.print(bookList.get(i).get("book_id") + "\t");
 			System.out.print(bookList.get(i).get("book_title") + "\t");
 			System.out.print(bookList.get(i).get("book_author") + "\t");
-			System.out.println(bookList.get(i).get("book_publisher"));
+			System.out.print(bookList.get(i).get("book_publisher")+ "\t");
+			System.out.println(bookList.get(i).get("create_date"));
 		}
 	}
-	
-	
-	
-	
-	
-	
-	
-	
 }
