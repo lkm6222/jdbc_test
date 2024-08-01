@@ -26,7 +26,7 @@ public class MemberDAO {
 
 	//1. 회원 정보 등록
 	public int insetMember(Member member) {
-		int chk = 0;
+		int resultChk = 0;
 		
 		try {
 			Class.forName(driver);
@@ -63,7 +63,7 @@ public class MemberDAO {
 			pstmt.setString(5, member.getMemberEmail());
 			pstmt.setString(6, member.getMemberPhone());
 			
-			chk = pstmt.executeUpdate();
+			resultChk = pstmt.executeUpdate();
 			//조회만 할 때 : executeQuery();
 			
 		}catch (SQLException e) {
@@ -81,7 +81,7 @@ public class MemberDAO {
 			}
 		}
 		
-		return chk;
+		return resultChk;
 	}	
 	
 	
